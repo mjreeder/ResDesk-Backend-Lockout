@@ -1,0 +1,72 @@
+.swagger-section .heading .path a {
+  overflow: visible;
+}
+
+.swagger-section .operations h4
+{
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.swagger-section .operations form.sandbox h4.collapsed {
+    color: #44c7f4;
+}
+
+.swagger-section .operations form.sandbox h4::before {
+    content: "\25B4";
+    animation: ease-in;
+}
+
+.swagger-section .operations form.sandbox h4.collapsed::before {
+    content: "\25BE";
+}
+
+.swagger-section .operations h4.sample-title:hover,
+.swagger-section .operations h4.schema-title:hover
+{
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.swagger-section .operations h4.sample-title:not(.collapsed),
+.swagger-section .operations h4.schema-title:not(.collapsed){
+    color: rgb(78, 87, 94);
+    background-color: #44c7f4;
+}
+
+.swagger-section .operations h4.sample-title:not(.collapsed):hover,
+.swagger-section .operations h4.schema-title:not(.collapsed):hover{
+    background-color: rgba(68, 199, 255, 0.15);
+}
+
+.swagger-section .operations h4.sample-title:active,
+.swagger-section .operations h4.schema-title:active
+{
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.swagger-section .sticky-nav [data-navigator] [data-resource] .item {
+  position: relative;
+  padding: 12px 30px;
+}
+
+.swagger-section .sticky-nav [data-navigator] [data-resource] .item.deprecated::before
+{
+  content: "\26A0";
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  font-family: "budicon-font";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 1;
+  visibility: visible;
+}
+
+/*
+.swagger-section .sticky-nav [data-navigator] [data-resource].active .item.deprecated {
+  background-color: purple;
+}
+*/

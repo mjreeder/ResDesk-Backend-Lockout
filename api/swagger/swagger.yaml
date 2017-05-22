@@ -1,0 +1,248 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: ResDesk Lockout Service
+# during dev, should point to your local machine
+host: localhost:10016
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /lockouts:
+    x-swagger-router-controller: LockoutController
+    get:
+      summary: Returns all lockouts
+      description: Returns all lockouts for active hall
+      operationId: getAll
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutsResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      summary: Creates a new lockout
+      description: Creates a new lockout
+      operationId: createLockout
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+        - name: PostBody
+          in: body
+          description: the Student id who was locked out
+          required: true
+          schema:
+            $ref: '#/definitions/Lockout'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutCreateResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /lockouts/recent:
+    x-swagger-router-controller: LockoutController
+    get:
+      summary: Returns recent lockout items
+      description: Returns recent lockout items
+      operationId: getRecent
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutsResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /lockouts/{id}:
+    x-swagger-router-controller: LockoutController
+    get:
+      summary: Get by Id
+      description: Returns a lockout
+      operationId: getById
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+        - name: id
+          in: path
+          description: The ID of the lockout item
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      summary: Delete a lockout item
+      description: Delete a lockout item
+      operationId: deleteLockout
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+        - name: id
+          in: path
+          description: The ID of the lockout item
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutsResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /lockouts/user/{bsuid}:
+    x-swagger-router-controller: LockoutController
+    get:
+      summary: Get by Id
+      description: Returns a lockout
+      operationId: getByUser
+      parameters:
+        - $ref: "#/parameters/AuthHeader"
+        - name: bsuid
+          in: path
+          description: The bsuid of the user
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/LockoutResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Lockout:
+    required:
+      - bsuid
+    description: Lockout item
+    properties:
+      bsuid:
+        type: string
+      hall:
+        type: string
+      createdAt:
+        type: string
+        format: dateTime
+      createdBy:
+        type: object
+        description: A User object
+      updatedAt:
+        type: string
+        format: dateTime
+      id:
+        type: string
+  LockoutCreateResponse:
+    required:
+      - status
+      - error
+      - description
+      - data
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
+        default: "Lockout created"
+      data:
+        type: object
+        properties:
+          bsuid:
+            type: string
+          createdAt:
+            type: string
+            format: dateTime
+          updatedAt:
+            type: string
+            format: dateTime
+          id:
+            type: string
+  LockoutsResponse:
+    required:
+      - status
+      - error
+      - description
+      - data
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
+      data:
+        type: array
+        items:
+          type: object
+          $ref: "#/definitions/Lockout"
+  LockoutResponse:
+    required:
+      - status
+      - error
+      - description
+      - data
+    properties:
+      status:
+        type: integer
+      error:
+        type: boolean
+      description:
+        type: string
+      data:
+        type: object
+        $ref: "#/definitions/Lockout"
+  ErrorResponse:
+    required:
+      - status
+      - error
+      - description
+    properties:
+      status:
+        type: integer
+        default: 500
+      data:
+        type: object
+      error:
+        type: boolean
+        default: true
+      description:
+        type: string
+parameters:
+  AuthHeader:
+    name: Authorization
+    in: header
+    description: the user JWT token
+    required: true
+    type: string
+
